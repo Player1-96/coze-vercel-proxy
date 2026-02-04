@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/coze_proxy.py": {
+      "runtime": "python39"
+    }
+  }
+}
