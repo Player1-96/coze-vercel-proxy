@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/coze_proxy.py": {
-      "runtime": "now-python@3.9.13"
-    }
-  }
-}

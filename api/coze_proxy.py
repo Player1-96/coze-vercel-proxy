@@ -13,10 +13,10 @@ def handler(request):
 
     try:
         body = request.get_json()
-    except:
+    except Exception as e:
         return {
             "statusCode": 400,
-            "body": json.dumps({"error": "Invalid JSON"}),
+            "body": json.dumps({"error": "Invalid JSON", "details": str(e)}),
             "headers": {"Content-Type": "application/json"}
         }
 
@@ -30,6 +30,7 @@ def handler(request):
             "headers": {"Content-Type": "application/json"}
         }
 
+    # 获取环境变量
     BOT_ID = os.environ.get("COZE_BOT_ID")
     ACCESS_TOKEN = os.environ.get("COZE_ACCESS_TOKEN")
 
