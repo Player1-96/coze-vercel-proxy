@@ -1,7 +1,1 @@
-{
-  "functions": {
-    "api/coze_proxy.py": {
-      "runtime": "python@3.9"
-    }
-  }
-}
+{}
