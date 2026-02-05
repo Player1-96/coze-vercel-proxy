@@ -1,5 +1,8 @@
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/api/coze_proxy.py" }
+  "builds": [
+    {
+      "src": "api/*.py",
+      "use": "@vercel/python"
+    }
   ]
 }
