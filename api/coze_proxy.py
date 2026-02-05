@@ -96,4 +96,5 @@ def handle_proxy(path):
             "details": str(e)
         }), 500
 
-# 注意：Vercel 环境下不需要 app.run()
+
+handler = app
