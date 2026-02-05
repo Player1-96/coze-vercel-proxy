@@ -4,5 +4,15 @@
       "src": "api/*.py",
       "use": "@vercel/python"
     }
+  ],
+  "routes": [
+    {
+      "src": "/api/coze_proxy",
+      "dest": "api/coze_proxy.py"
+    },
+    {
+      "src": "/api/ping",
+      "dest": "api/ping.py"
+    }
   ]
 }
