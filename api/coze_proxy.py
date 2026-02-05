@@ -9,9 +9,15 @@ CORS(app)
 
 
 # 修改这里的路由装饰器，使其支持所有进入该脚本的路径
-@app.route('/', defaults={'path': ''}, methods=['POST', 'OPTIONS'])
-@app.route('/<path:path>', methods=['POST', 'OPTIONS'])
+@app.route('/', defaults={'path': ''}, methods=['GET', 'POST', 'OPTIONS'])
+@app.route('/<path:path>', methods=['GET', 'POST', 'OPTIONS'])
 def handle_proxy(path):
+    # 增加这个：如果是 GET 请求，返回一个存活证明
+    if request.method == 'GET':
+        return jsonify({"status": "running", "message": "Please use POST to chat"}), 200
+
+    if request.method == 'OPTIONS':
+        return '', 204
     # 处理逻辑保持不变 ...
     # 增加一个简单的调试打印，可以在 Vercel Logs 看到进入了哪个路径
     print(f"Received request on path: {path}")
