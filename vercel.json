@@ -7,11 +7,11 @@
   ],
   "routes": [
     {
-      "src": "/api/coze_proxy",
-      "dest": "api/coze_proxy.py"
+      "src": "/api/(.*)",
+      "dest": "api/$1.py"
     },
     {
-      "src": "/api/ping",
+      "src": "/",
       "dest": "api/ping.py"
     }
   ]
