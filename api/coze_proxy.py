@@ -2,6 +2,7 @@ import os
 import json
 import requests
 
+
 def handler(request):
     # 1. Method 校验
     if request.method != "POST":
