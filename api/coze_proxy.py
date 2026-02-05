@@ -47,5 +47,5 @@ def handle_proxy(path):
         return jsonify({"error": str(e)}), 500
 
 
-# 关键：必须显式将 app 赋值给 handler，这是解决 issubclass 报错的核心
+# 核心修正：显式将 app 赋值给 handler，这是解决 issubclass 报错的关键
 handler = app
