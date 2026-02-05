@@ -1,6 +1,12 @@
 {
   "rewrites": [
-    { "source": "/api/coze_proxy", "destination": "/api/coze_proxy.py" },
-    { "source": "/", "destination": "/api/coze_proxy.py" }
+    {
+      "source": "/api/coze_proxy",
+      "destination": "/api/coze_proxy.py"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/api/coze_proxy.py"
+    }
   ]
 }
