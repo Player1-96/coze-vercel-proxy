@@ -1,8 +1,7 @@
 {
-  "builds": [
-    {
-      "src": "api/*.py",
-      "use": "@vercel/python"
+  "functions": {
+    "api/coze_proxy.py": {
+      "runtime": "python3.12"
     }
-  ]
+  }
 }
