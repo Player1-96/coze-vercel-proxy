@@ -8,10 +8,13 @@ app = Flask(__name__)
 CORS(app)
 
 
-# 这样写可以同时支持 根路径 和 显式的 /api/coze_proxy 路径
-@app.route('/', methods=['POST', 'OPTIONS'])
-@app.route('/api/coze_proxy', methods=['POST', 'OPTIONS'])
-def handle_proxy():
+# 修改这里的路由装饰器，使其支持所有进入该脚本的路径
+@app.route('/', defaults={'path': ''}, methods=['POST', 'OPTIONS'])
+@app.route('/<path:path>', methods=['POST', 'OPTIONS'])
+def handle_proxy(path):
+    # 处理逻辑保持不变 ...
+    # 增加一个简单的调试打印，可以在 Vercel Logs 看到进入了哪个路径
+    print(f"Received request on path: {path}")
     # 处理浏览器的预检请求 (CORS)
     if request.method == 'OPTIONS':
         return '', 204
