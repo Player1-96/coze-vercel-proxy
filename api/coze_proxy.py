@@ -1,64 +1,33 @@
 import os
 import json
 import requests
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
 
 
-def handler(request):
-    # 1. Method 校验
-    if request.method != "POST":
-        return {
-            "statusCode": 405,
-            "body": json.dumps({"error": "Method not allowed"}),
-            "headers": {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*"
-            }
-        }
-
-    # 2. 解析 JSON
-    try:
-        body = request.json()
-    except Exception as e:
-        return {
-            "statusCode": 400,
-            "body": json.dumps(
-                {"error": "Invalid JSON", "details": str(e)},
-                ensure_ascii=False
-            ),
-            "headers": {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*"
-            }
-        }
+@app.route('/api/coze_proxy', methods=['POST'])
+@app.route('/', methods=['POST']) # 兼容根目录 POST 访问
+def handle_proxy():
+    # 1. 解析 JSON
+    body = request.get_json(silent=True)
+    if not body:
+        return jsonify({"error": "Invalid JSON"}), 400
 
     query = body.get("query")
     user_id = body.get("userId", "default_user")
 
     if not query:
-        return {
-            "statusCode": 400,
-            "body": json.dumps({"error": "Missing query"}, ensure_ascii=False),
-            "headers": {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*"
-            }
-        }
+        return jsonify({"error": "Missing query"}), 400
 
-    # 3. 环境变量
+    # 2. 环境变量
     BOT_ID = os.environ.get("COZE_BOT_ID")
     ACCESS_TOKEN = os.environ.get("COZE_ACCESS_TOKEN")
 
     if not BOT_ID or not ACCESS_TOKEN:
-        return {
-            "statusCode": 500,
-            "body": json.dumps({"error": "Missing Coze credentials"}, ensure_ascii=False),
-            "headers": {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*"
-            }
-        }
+        return jsonify({"error": "Missing Coze credentials"}), 500
 
-    # 4. 调用 Coze
+    # 3. 调用 Coze
     try:
         resp = requests.post(
             "https://api.coze.com/v1/bot/chat",
@@ -77,26 +46,13 @@ def handler(request):
         data = resp.json()
 
         reply = "无回复"
+        # 注意：根据 Coze API 版本不同，message 结构可能不同，请根据实际情况调整
         for msg in data.get("messages", []):
             if msg.get("role") == "assistant":
                 reply = msg.get("content", "无内容")
                 break
 
-        return {
-            "statusCode": 200,
-            "body": json.dumps({"reply": reply}, ensure_ascii=False),
-            "headers": {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*"
-            }
-        }
+        return jsonify({"reply": reply})
 
     except Exception as e:
-        return {
-            "statusCode": 500,
-            "body": json.dumps({"error": str(e)}, ensure_ascii=False),
-            "headers": {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*"
-            }
-        }
+        return jsonify({"error": str(e)}), 500
